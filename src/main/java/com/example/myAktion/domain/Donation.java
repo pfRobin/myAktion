@@ -7,11 +7,17 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 public class Donation {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
+    @JsonProperty(access=Access.READ_ONLY)
     private Long id;
     private double amount;
     private boolean receiptRequested;
@@ -19,6 +25,44 @@ public class Donation {
 
     @Embedded
     private Account account;
+
+    @ManyToOne
+    @JsonIgnore
+    private Campaign campaign;
+
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Account getAccount() {
+        return this.account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public Campaign getCampaign() {
+        return this.campaign;
+    }
+
+    public void setCampaign(Campaign campaign) {
+        this.campaign = campaign;
+    }
+
+    public Status getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
 
     public enum Status {
         IN_PROCESS, TRANSFERRED
@@ -54,5 +98,14 @@ public class Donation {
     public void setDonorName(String donorName) {
         this.donorName = donorName;
     }
+
+    @Override
+    public String toString() {
+        return "Donation [id=" + id + ", amount=" + amount + ", receiptRequested=" + receiptRequested + ", donorName="
+                + donorName + ", account=" + account + ", campaign=" + campaign + ", status=" + status + "]";
+    }
+
+
+    
 
 }
